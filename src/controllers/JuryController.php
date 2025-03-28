@@ -1,37 +1,37 @@
 <?php
-// Inclure le modèle Admin et la configuration de la base de données
+// Inclure la configuration de la base de données et le modèle Jury
 include_once 'config/Database.php';
-include_once 'models/Admin.php';
+include_once 'models/Jury.php';
 
-class AdminController {
+class JuryController {
     private $db;
-    private $admin;
+    private $jury;
 
     public function __construct() {
         // Créer une instance de la base de données
         $database = new Database();
         $this->db = $database->getConnection();
 
-        // Créer une instance de la classe Admin avec la connexion à la base de données
-        $this->admin = new Admin($this->db);
+        // Créer une instance de la classe Jury avec la connexion à la base de données
+        $this->jury = new Jury($this->db);
     }
 
-    // Méthode pour gérer la connexion de l'admin
+    // Méthode pour gérer la connexion du jury
     public function login() {
         // Récupérer les données envoyées en POST
         $data = json_decode(file_get_contents("php://input"));
-        
+
         // Vérifier si les données sont valides
         if (!isset($data->email) || !isset($data->password)) {
             echo json_encode(['success' => false, 'message' => 'Email et mot de passe sont requis']);
             return;
         }
-        
+
         $email = $data->email;
         $password = $data->password;
 
-        // Appeler la méthode loginAdmin du modèle Admin
-        $result = $this->admin->loginAdmin($email, $password);
+        // Appeler la méthode loginJury du modèle Jury
+        $result = $this->jury->loginJury($email, $password);
 
         // Vérifier le résultat et retourner la réponse appropriée
         if ($result) {
@@ -43,20 +43,20 @@ class AdminController {
         }
     }
 
-    // Méthode pour vérifier si l'admin est connecté
+    // Méthode pour vérifier si le jury est connecté
     public function isLoggedIn() {
-        if ($this->admin->isAdminLoggedIn()) {
-            // Admin connecté
-            echo json_encode(['success' => true, 'message' => 'Admin connecté']);
+        if ($this->jury->isJuryLoggedIn()) {
+            // Jury connecté
+            echo json_encode(['success' => true, 'message' => 'Jury connecté']);
         } else {
-            // Admin non connecté
-            echo json_encode(['success' => false, 'message' => 'Admin non connecté']);
+            // Jury non connecté
+            echo json_encode(['success' => false, 'message' => 'Jury non connecté']);
         }
     }
 
-    // Méthode pour déconnecter l'admin
+    // Méthode pour déconnecter le jury
     public function logout() {
-        $this->admin->logout();
+        $this->jury->logout();
         echo json_encode(['success' => true, 'message' => 'Déconnexion réussie']);
     }
 }

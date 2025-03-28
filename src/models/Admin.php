@@ -10,7 +10,7 @@ class Admin {
     // Fonction pour vérifier l'email et le mot de passe
     public function loginAdmin($email, $password) {
         // Préparation de la requête pour chercher l'admin avec l'email
-        $sql = "SELECT * FROM admin WHERE email=:email";
+        $sql = "SELECT * FROM admin WHERE email=:email AND role='admin'";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
